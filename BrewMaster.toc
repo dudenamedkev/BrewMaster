@@ -1,0 +1,8 @@
+## Interface: 70000
+## Title: BrewMaster
+## Version: 0.1
+## Notes: Brewing made simple
+## Author: Kevin Brosseau
+
+BrewMaster.lua
+BrewMaster.xml
