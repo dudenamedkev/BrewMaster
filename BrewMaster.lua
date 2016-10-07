@@ -46,6 +46,11 @@ end
 
 --Get player health and total stagger every frame
 local function BrewMaster_OnUpdate(self, event, ...)
+	--If not set, get player guid
+	if playerGUID == 0 then
+		playerGUID = UnitGUID("player")
+	end
+	
 	--Get and calc health
 	maxHealth = UnitHealthMax("player")
 	currentHealth = UnitHealth("player")
@@ -74,11 +79,10 @@ end
 
 --On event function
 function BrewMaster_OnEvent(self, event, ...)
---On addon load, get player guid, and setup info strings
+--On addon load setup info strings
 	if event == "ADDON_LOADED" and ... == "BrewMaster" then
 		--Unregister from addon load (only happens once)
 		self:UnregisterEvent("ADDON_LOADED")
-		playerGUID = UnitGUID("player")
 		BrewMaster:SetScript("OnUpdate", BrewMaster_OnUpdate)
 		
 		--Create HP Percent string
