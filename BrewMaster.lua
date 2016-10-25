@@ -10,13 +10,19 @@ local maxHealth = 0
 local currentHealth = 0
 local healthPercent = 0
 local brewCharges = 0
-local ironskinOn = false
+local ironskinOn = nil
 local ironskinDuration = 0
 
---UI Strings
+--UI Elements
 local healthPercentString = nil
 local staggerString = nil
 local brewString = nil
+local frameTexture = nil
+
+--Other
+local currentTime = 0
+local lastTime = 0
+local updateRate = 33 --in ms
 
 --Helper function for rounding to given decimal place
 function round(value, decimal)
@@ -46,6 +52,17 @@ end
 
 --Get player health and total stagger every frame
 local function BrewMaster_OnUpdate(self, event, ...)
+
+	--Get the current time in milliseconds
+	currentTime = GetTime() * 1000
+	
+	--only update at defined update rate 
+	if currentTime - lastTime > updateRate then
+		lastTime = currentTime
+	else
+		return
+	end
+	
 	--If not set, get player guid
 	if playerGUID == 0 then
 		playerGUID = UnitGUID("player")
@@ -60,6 +77,16 @@ local function BrewMaster_OnUpdate(self, event, ...)
 	totalStagger = UnitStagger("player")
 	brewCharges = GetSpellCharges("Purifying Brew")
 	
+	--Check if Ironskin Brew is active
+	ironskinOn = UnitBuff("player", "Ironskin Brew", nil, "PLAYER")	
+	
+	--If ironskin is on, toggle the green background texture
+	if ironskinOn ~= nil then
+		IronskinTexture:Show()
+	else
+		IronskinTexture:Hide()
+	end
+	
 	--Set HP Percent and brewCharges every frame
 	BrewMasterHealthPercentString:SetText(healthPercent.."%")
 	BrewMasterBrewString:SetText(brewCharges)
@@ -72,9 +99,15 @@ end
 
 --Register Events on load 
 function BrewMaster_OnLoad(self, event, ...)
+	--Register for events
 	self:RegisterEvent("ADDON_LOADED");
 	self:RegisterEvent(beginCombat);
 	self:RegisterEvent(leaveCombat);
+	
+	--Enable dragging of the frame
+	self:RegisterForDrag("LeftButton");
+	self:SetScript("OnDragStart", self.StartMoving);
+	self:SetScript("OnDragStop", self.StopMovingOrSizing);
 end
 
 --On event function
@@ -86,28 +119,29 @@ function BrewMaster_OnEvent(self, event, ...)
 		BrewMaster:SetScript("OnUpdate", BrewMaster_OnUpdate)
 		
 		--Create HP Percent string
-		healthPercentString = BrewMaster:CreateFontString("BrewMasterHealthPercentString", "ARTWORK", "GameFontNormal")
+		healthPercentString = BrewMaster:CreateFontString("BrewMasterHealthPercentString", "OVERLAY", "GameFontNormal")
 		healthPercentString:SetPoint("TOP", "BrewMaster", "TOP", 0, 0)
 		BrewMasterHealthPercentString:SetFont("Fonts\\FRIZQT__.ttf", 16, nil)
 		BrewMasterHealthPercentString:SetText("0.0%")
 		
 		--Create stagger string
-		staggerString = BrewMaster:CreateFontString("BrewMasterStaggerString", "ARTWORK", "GameFontNormal")
+		staggerString = BrewMaster:CreateFontString("BrewMasterStaggerString", "OVERLAY", "GameFontNormal")
 		staggerString:SetPoint("CENTER", "BrewMaster", "CENTER", 0, 0)
 		BrewMasterStaggerString:SetFont("Fonts\\FRIZQT__.ttf", 32, nil)
 		BrewMasterStaggerString:SetText("0.0%")
 		
 		--Create Brew String
-		brewString = BrewMaster:CreateFontString("BrewMasterBrewString", "ARTWORK", "GameFontNormal")
+		brewString = BrewMaster:CreateFontString("BrewMasterBrewString", "OVERLAY", "GameFontNormal")
 		brewString:SetPoint("BOTTOM", "BrewMaster", "BOTTOM", 0, 0)
 		BrewMasterBrewString:SetFont("Fonts\\FRIZQT__.ttf", 16, nil)
-		BrewMasterBrewString:SetText("0")
+		BrewMasterBrewString:SetText("0")		
 		
 		--Show frames/strings
 		BrewMaster:Show()
 		staggerString:Show()
 		brewString:Show()
-		healthPercentString:show();
+		healthPercentString:Show();
+		
 	end
 	
 	--Check combat log only while in combat

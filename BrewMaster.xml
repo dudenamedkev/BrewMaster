@@ -1,26 +1,27 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
 
 <Frame name="BrewMaster" parent="UIParent" movable="true" enableMouse="true">
+	<Scripts>
+		<OnLoad function="BrewMaster_OnLoad"></OnLoad>
+		<OnEvent function="BrewMaster_OnEvent"></OnEvent>
+	</Scripts>
 	<Size x="100" y="100" />
-	<TitleRegion>
-		<size x="60" y="20" />
-		<Anchors>
-			<Anchor point="TOP" />
-		</Anchors>
-	</TitleRegion>
-	<Layers>
-		<Layer level="BACKGROUND">
-			<Texture setAllPoints="true">
-				<Color r="0.0" g="0.0" b="0.0" a="0.5" />
-			</Texture>
-		</Layer>
-	</Layers>
 	<Anchors>
 		<Anchor point="CENTER" relativeTo="UIParent" />
 	</Anchors>
-<Scripts>
-	<OnLoad function="BrewMaster_OnLoad"></OnLoad>
-	<OnEvent function="BrewMaster_OnEvent"></OnEvent>
-</Scripts>
+	<Layers>
+		<Layer level="BACKGROUND">
+			<Texture name="FrameBackground" setAllPoints="true">
+				<Color r="0.0" g="0.0" b="0.0" a="0.5" />
+			</Texture>
+		</Layer>
+		<Layer level="ARTWORK">
+			<Texture name="IronskinTexture" setAllPoints="true">
+				<Color r="0.0" g="0.75" b="0.0" a="0.5" />
+			</Texture>
+		</Layer>
+	</Layers>
+	<Frames>
+	</Frames>
 </Frame>
 </Ui>
