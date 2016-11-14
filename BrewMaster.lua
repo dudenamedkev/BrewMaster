@@ -54,14 +54,14 @@ end
 local function BrewMaster_OnUpdate(self, event, ...)
 
 	--Get the current time in milliseconds
-	currentTime = GetTime() * 1000
+	--currentTime = GetTime() * 1000
 	
 	--only update at defined update rate 
-	if currentTime - lastTime > updateRate then
-		lastTime = currentTime
-	else
-		return
-	end
+	--if currentTime - lastTime > updateRate then
+	--	lastTime = currentTime
+	--else
+	--	return
+	--end
 	
 	--If not set, get player guid
 	if playerGUID == 0 then
