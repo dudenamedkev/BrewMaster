@@ -78,10 +78,21 @@ local function BrewMaster_OnUpdate(self, event, ...)
 	brewCharges = GetSpellCharges("Purifying Brew")
 	
 	--Check if Ironskin Brew is active
-	ironskinOn = UnitBuff("player", "Ironskin Brew", nil, "PLAYER")	
+	local spellName
+	for i = 1, 40 do
+		spellName = UnitBuff("player", i, "PLAYER")
+		if spellName and spellName =="Ironskin Brew" then
+			ironskinOn = true
+			break
+		else
+			ironskinOn = false
+		end
+	end
+		
+	
 	
 	--If ironskin is on, toggle the green background texture
-	if ironskinOn ~= nil then
+	if ironskinOn == true then
 		IronskinTexture:Show()
 	else
 		IronskinTexture:Hide()

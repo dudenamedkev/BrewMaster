@@ -1,6 +1,6 @@
-## Interface: 70100
+## Interface: 80000
 ## Title: BrewMaster
-## Version: 0.2
+## Version: 0.3
 ## Notes: Brewing made simple
 ## Author: Kevin Brosseau
 
